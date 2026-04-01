@@ -17,3 +17,7 @@ pyyaml
 dill
 -e .
 setuptools
+matplotlib
+seaborn
+pymysql 
+sqlalchemy
