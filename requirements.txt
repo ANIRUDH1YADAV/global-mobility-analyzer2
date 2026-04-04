@@ -6,6 +6,7 @@ imbalanced-learn
 mysql-connector-python
 pymysql
 SQLAlchemy
+pyodbc
 python-dotenv
 fastapi
 uvicorn[standard]
