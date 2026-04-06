@@ -1,24 +1,34 @@
+# ─── Core Data Science ───────────────────────────────────
 pandas
 numpy
 scikit-learn
 xgboost
 imbalanced-learn
-mysql-connector-python
-pymysql
+scipy
+matplotlib
+seaborn
+
+# ─── Azure SQL Connection ────────────────────────────────
 SQLAlchemy
 pyodbc
+
+# ─── Environment & Config ────────────────────────────────
 python-dotenv
+pyyaml
+dill
+
+# ─── FastAPI Web App ─────────────────────────────────────
 fastapi
 uvicorn[standard]
 jinja2
 python-multipart
+
+# ─── ML Monitoring ───────────────────────────────────────
 evidently
+
+# ─── AWS S3 (Model Storage) ──────────────────────────────
 boto3
-pyyaml
-dill
--e .
+
+# ─── Project Package ─────────────────────────────────────
 setuptools
-matplotlib
-seaborn
-pymysql 
-sqlalchemy
+-e .

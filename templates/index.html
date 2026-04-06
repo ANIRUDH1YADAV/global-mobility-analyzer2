@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>US Visa Predictor</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🌍 US Visa Approval Predictor</h1>
+        <p class="subtitle">Fill in the details below to predict visa approval status</p>
+
+        <form action="/predict" method="post">
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label>Education Level</label>
+                    <select name="education_of_employee">
+                        <option>High School</option>
+                        <option>Bachelor's</option>
+                        <option>Master's</option>
+                        <option>Doctorate</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Prevailing Wage ($)</label>
+                    <input type="number" name="prevailing_wage" step="any" placeholder="e.g. 75000" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Has Job Experience</label>
+                    <select name="has_job_experience">
+                        <option value="Y">Yes</option>
+                        <option value="N">No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Unit of Wage</label>
+                    <select name="unit_of_wage">
+                        <option>Year</option>
+                        <option>Hour</option>
+                        <option>Week</option>
+                        <option>Month</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Number of Employees</label>
+                    <input type="number" name="no_of_employees" placeholder="e.g. 500" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Year of Establishment</label>
+                    <input type="number" name="yr_of_estab" placeholder="e.g. 2005" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Continent</label>
+                    <select name="continent">
+                        <option>Asia</option>
+                        <option>Europe</option>
+                        <option>North America</option>
+                        <option>Africa</option>
+                        <option>South America</option>
+                        <option>Oceania</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Region of Employment</label>
+                    <select name="region_of_employment">
+                        <option>Midwest</option>
+                        <option>South</option>
+                        <option>West</option>
+                        <option>Northeast</option>
+                        <option>Island</option>
+                    </select>
+                </div>
+
+                <div class="form-group full-width">
+                    <button class="predict-btn" type="submit">
+                        🔍 Predict Visa Status
+                    </button>
+                </div>
+
+            </div>
+        </form>
+
+        {% if result %}
+    <div class="result-box {{ 'result-approved' if result == 'Certified' else 'result-denied' }}">
+        {% if result == 'Certified' %}
+            ✅ Visa Likely to be APPROVED
+        {% else %}
+            ❌ Visa Likely to be DENIED
+        {% endif %}
+    </div>
+
+    <!-- ✅ ADD THIS BELOW -->
+    {% if confidence %}
+        <p style="text-align:center; font-weight:600; margin-top:10px;">
+            Confidence: {{ confidence }}%
+        </p>
+    {% endif %}
+
+{% endif %}
