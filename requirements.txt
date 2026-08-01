@@ -32,3 +32,6 @@ boto3
 # ─── Project Package ─────────────────────────────────────
 setuptools
 -e .
+
+
+pymongo  

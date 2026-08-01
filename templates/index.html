@@ -1,108 +1,254 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>US Visa Predictor</title>
+    <title>Global Mobility Analyzer</title>
+
     <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
+
     <div class="container">
-        <h1>🌍 US Visa Approval Predictor</h1>
-        <p class="subtitle">Fill in the details below to predict visa approval status</p>
+
+        <h1>🌍 Global Mobility Analyzer</h1>
+
+        <p class="subtitle">
+            Predict the outcome of a Global Mobility (Visa) application using Machine Learning
+        </p>
 
         <form action="/predict" method="post">
+
             <div class="form-grid">
+
+                <!-- Education -->
 
                 <div class="form-group">
                     <label>Education Level</label>
-                    <select name="education_of_employee">
-                        <option>High School</option>
-                        <option>Bachelor's</option>
-                        <option>Master's</option>
-                        <option>Doctorate</option>
+
+                    <select
+                        name="education_of_employee"
+                        required>
+
+                        <option value="High School">High School</option>
+                        <option value="Bachelor's">Bachelor's</option>
+                        <option value="Master's">Master's</option>
+                        <option value="Doctorate">Doctorate</option>
+
                     </select>
                 </div>
+
+                <!-- Wage -->
 
                 <div class="form-group">
                     <label>Prevailing Wage ($)</label>
-                    <input type="number" name="prevailing_wage" step="any" placeholder="e.g. 75000" required>
+
+                    <input
+                        type="number"
+                        name="prevailing_wage"
+                        min="0"
+                        step="0.01"
+                        placeholder="e.g. 75000"
+                        required>
                 </div>
+
+                <!-- Experience -->
 
                 <div class="form-group">
                     <label>Has Job Experience</label>
-                    <select name="has_job_experience">
+
+                    <select
+                        name="has_job_experience"
+                        required>
+
                         <option value="Y">Yes</option>
                         <option value="N">No</option>
+
                     </select>
                 </div>
+
+                <!-- Wage Unit -->
 
                 <div class="form-group">
                     <label>Unit of Wage</label>
-                    <select name="unit_of_wage">
-                        <option>Year</option>
-                        <option>Hour</option>
-                        <option>Week</option>
-                        <option>Month</option>
+
+                    <select
+                        name="unit_of_wage"
+                        required>
+
+                        <option value="Year">Year</option>
+                        <option value="Hour">Hour</option>
+                        <option value="Week">Week</option>
+                        <option value="Month">Month</option>
+
                     </select>
                 </div>
+
+                <!-- Employees -->
 
                 <div class="form-group">
                     <label>Number of Employees</label>
-                    <input type="number" name="no_of_employees" placeholder="e.g. 500" required>
+
+                    <input
+                        type="number"
+                        name="no_of_employees"
+                        min="1"
+                        placeholder="e.g. 500"
+                        required>
                 </div>
+
+                <!-- Year -->
 
                 <div class="form-group">
                     <label>Year of Establishment</label>
-                    <input type="number" name="yr_of_estab" placeholder="e.g. 2005" required>
+
+                    <input
+                        type="number"
+                        name="yr_of_estab"
+                        min="1800"
+                        max="2100"
+                        placeholder="e.g. 2005"
+                        required>
                 </div>
+
+                <!-- Continent -->
 
                 <div class="form-group">
                     <label>Continent</label>
-                    <select name="continent">
-                        <option>Asia</option>
-                        <option>Europe</option>
-                        <option>North America</option>
-                        <option>Africa</option>
-                        <option>South America</option>
-                        <option>Oceania</option>
+
+                    <select
+                        name="continent"
+                        required>
+
+                        <option value="Asia">Asia</option>
+                        <option value="Europe">Europe</option>
+                        <option value="North America">North America</option>
+                        <option value="South America">South America</option>
+                        <option value="Africa">Africa</option>
+                        <option value="Oceania">Oceania</option>
+
                     </select>
                 </div>
+
+                <!-- Region -->
 
                 <div class="form-group">
                     <label>Region of Employment</label>
-                    <select name="region_of_employment">
-                        <option>Midwest</option>
-                        <option>South</option>
-                        <option>West</option>
-                        <option>Northeast</option>
-                        <option>Island</option>
+
+                    <select
+                        name="region_of_employment"
+                        required>
+
+                        <option value="Midwest">Midwest</option>
+                        <option value="South">South</option>
+                        <option value="West">West</option>
+                        <option value="Northeast">Northeast</option>
+                        <option value="Island">Island</option>
+
                     </select>
                 </div>
 
+                <!-- Job Training -->
+
+                <div class="form-group">
+                    <label>Requires Job Training</label>
+
+                    <select
+                        name="requires_job_training"
+                        required>
+
+                        <option value="Y">Yes</option>
+                        <option value="N">No</option>
+
+                    </select>
+                </div>
+
+                <!-- Full Time -->
+
+                <div class="form-group">
+                    <label>Full Time Position</label>
+
+                    <select
+                        name="full_time_position"
+                        required>
+
+                        <option value="Y">Yes</option>
+                        <option value="N">No</option>
+
+                    </select>
+                </div>
+
+                <!-- Buttons -->
+
                 <div class="form-group full-width">
-                    <button class="predict-btn" type="submit">
+
+                    <button
+                        class="predict-btn"
+                        type="submit">
+
                         🔍 Predict Visa Status
+
                     </button>
+
+                    <button
+                        class="reset-btn"
+                        type="reset">
+
+                        Reset
+
+                    </button>
+
                 </div>
 
             </div>
+
         </form>
 
         {% if result %}
-    <div class="result-box {{ 'result-approved' if result == 'Certified' else 'result-denied' }}">
-        {% if result == 'Certified' %}
-            ✅ Visa Likely to be APPROVED
-        {% else %}
-            ❌ Visa Likely to be DENIED
+
+        <div class="result-box {{ 'result-approved' if result == 'Certified' else 'result-denied' }}">
+
+            {% if result == "Certified" %}
+
+            <h2>✅ Visa Likely to be APPROVED</h2>
+
+            {% else %}
+
+            <h2>❌ Visa Likely to be DENIED</h2>
+
+            {% endif %}
+
+            <h3>{{ result }}</h3>
+
+            {% if confidence %}
+
+            <p class="confidence">
+
+                Confidence : <strong>{{ confidence }}%</strong>
+
+            </p>
+
+            {% endif %}
+
+        </div>
+
         {% endif %}
+
     </div>
 
-    <!-- ✅ ADD THIS BELOW -->
-    {% if confidence %}
-        <p style="text-align:center; font-weight:600; margin-top:10px;">
-            Confidence: {{ confidence }}%
-        </p>
-    {% endif %}
+    <footer>
 
-{% endif %}
+        <p>
+
+            Global Mobility Analyzer |
+            Powered by FastAPI • Scikit-Learn • MongoDB Atlas
+
+        </p>
+
+    </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,16 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+*.log
+*.sqlite3
+.venv
+venv
+myvenv
+.env
+.git
+.gitignore
+artifacts
+logs
+notebook
+*.ipynb

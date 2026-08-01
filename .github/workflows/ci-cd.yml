@@ -1,0 +1,58 @@
+name: CI-CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run syntax check
+        run: |
+          python - <<'PY'
+          import os
+          import py_compile
+
+          paths = [
+            'app.py',
+            'main.py',
+            'scripts/upload_data.py',
+          ]
+
+          for root, _, files in os.walk('src'):
+            for file_name in files:
+              if file_name.endswith('.py'):
+                paths.append(os.path.join(root, file_name))
+
+          for path in paths:
+            py_compile.compile(path, doraise=True)
+
+          print('Syntax check passed')
+          PY
+
+      - name: Run a lightweight import check
+        run: |
+          python - <<'PY'
+          import app
+          import main
+          print('Imports OK')
+          PY
