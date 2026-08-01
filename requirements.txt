@@ -29,9 +29,4 @@ evidently
 # ─── AWS S3 (Model Storage) ──────────────────────────────
 boto3
 
-# ─── Project Package ─────────────────────────────────────
-setuptools
--e .
-
-
 pymongo  
