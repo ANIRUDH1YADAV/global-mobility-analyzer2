@@ -2,6 +2,9 @@ import os
 import sys
 import shutil
 
+from dotenv import load_dotenv
+from huggingface_hub import HfApi
+
 from src.configuration.configuration import ConfigurationManager
 from src.entity.config_entity import (
     DataTransformationArtifact,
@@ -11,6 +14,8 @@ from src.entity.config_entity import (
 from src.exception import CustomException
 from src.logger import logger
 from src.utils.main_utils import create_directories
+
+load_dotenv()
 
 
 class ModelPusher:
@@ -25,6 +30,7 @@ class ModelPusher:
     ) -> ModelPusherArtifact:
 
         try:
+
             logger.info("Starting Model Pusher")
 
             create_directories([
@@ -54,6 +60,60 @@ class ModelPusher:
                 self.config.pushed_label_encoder_path,
             )
 
+            logger.info("Uploading model artifacts to Hugging Face")
+
+            api = HfApi()
+
+            repo_id = os.getenv("HUGGINGFACE_REPO")
+            token = os.getenv("HUGGINGFACE_TOKEN")
+
+            if repo_id is None:
+                raise ValueError(
+                    "HUGGINGFACE_REPO not found in .env file."
+                )
+
+            if token is None:
+                raise ValueError(
+                    "HUGGINGFACE_TOKEN not found in .env file."
+                )
+
+            # Upload model
+            api.upload_file(
+                path_or_fileobj=self.config.pushed_model_path,
+                path_in_repo="model.pkl",
+                repo_id=repo_id,
+                repo_type="model",
+                token=token,
+            )
+
+            logger.info("Uploaded model.pkl")
+
+            # Upload preprocessor
+            api.upload_file(
+                path_or_fileobj=self.config.pushed_preprocessor_path,
+                path_in_repo="preprocessor.pkl",
+                repo_id=repo_id,
+                repo_type="model",
+                token=token,
+            )
+
+            logger.info("Uploaded preprocessor.pkl")
+
+            # Upload label encoder
+            api.upload_file(
+                path_or_fileobj=self.config.pushed_label_encoder_path,
+                path_in_repo="label_encoder.pkl",
+                repo_id=repo_id,
+                repo_type="model",
+                token=token,
+            )
+
+            logger.info("Uploaded label_encoder.pkl")
+
+            logger.info(
+                "All model artifacts uploaded successfully to Hugging Face"
+            )
+
             logger.info("Model Pusher Completed Successfully")
 
             return ModelPusherArtifact(
@@ -63,4 +123,5 @@ class ModelPusher:
             )
 
         except Exception as e:
-            raise CustomException(e, sys)
+            logger.exception("Model Pusher Failed")
+            raise CustomException(e, sys) from e

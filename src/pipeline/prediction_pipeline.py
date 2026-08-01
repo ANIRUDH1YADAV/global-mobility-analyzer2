@@ -1,16 +1,16 @@
+import os
 import sys
 from dataclasses import dataclass
 
 import pandas as pd
+from dotenv import load_dotenv
+from huggingface_hub import hf_hub_download
 
-from src.constants import (
-    PUSHED_MODEL_PATH,
-    PUSHED_PREPROCESSOR_PATH,
-    PUSHED_LABEL_ENCODER_PATH,
-)
 from src.exception import CustomException
 from src.logger import logger
 from src.utils.main_utils import load_object
+
+load_dotenv()
 
 
 @dataclass
@@ -50,22 +50,42 @@ class PredictionPipeline:
 
         try:
 
-            logger.info("Loading preprocessor")
-            self.preprocessor = load_object(
-                PUSHED_PREPROCESSOR_PATH
+            logger.info("Downloading model artifacts from Hugging Face")
+
+            repo_id = os.getenv("HUGGINGFACE_REPO")
+            token = os.getenv("HUGGINGFACE_TOKEN")
+
+            model_path = hf_hub_download(
+                repo_id=repo_id,
+                filename="model.pkl",
+                token=token,
             )
+
+            preprocessor_path = hf_hub_download(
+                repo_id=repo_id,
+                filename="preprocessor.pkl",
+                token=token,
+            )
+
+            label_encoder_path = hf_hub_download(
+                repo_id=repo_id,
+                filename="label_encoder.pkl",
+                token=token,
+            )
+
+            logger.info("Loading preprocessor")
+            self.preprocessor = load_object(preprocessor_path)
 
             logger.info("Loading model")
-            self.model = load_object(
-                PUSHED_MODEL_PATH
-            )
+            self.model = load_object(model_path)
 
             logger.info("Loading label encoder")
-            self.label_encoder = load_object(
-                PUSHED_LABEL_ENCODER_PATH
-            )
+            self.label_encoder = load_object(label_encoder_path)
+
+            logger.info("Prediction Pipeline Ready")
 
         except Exception as e:
+            logger.exception("Prediction Pipeline Initialization Failed")
             raise CustomException(e, sys) from e
 
     def predict(
@@ -77,22 +97,16 @@ class PredictionPipeline:
 
             logger.info("Running prediction")
 
-            transformed = self.preprocessor.transform(
-                features_df
-            )
+            transformed = self.preprocessor.transform(features_df)
 
             if hasattr(transformed, "toarray"):
                 transformed = transformed.toarray()
 
-            prediction = self.model.predict(
-                transformed
-            )[0]
+            prediction = self.model.predict(transformed)[0]
 
-            prediction_label = (
-                self.label_encoder.inverse_transform(
-                    [prediction]
-                )[0]
-            )
+            prediction_label = self.label_encoder.inverse_transform(
+                [prediction]
+            )[0]
 
             probability = self.model.predict_proba(
                 transformed
@@ -106,4 +120,5 @@ class PredictionPipeline:
             return prediction_label, confidence
 
         except Exception as e:
+            logger.exception("Prediction Failed")
             raise CustomException(e, sys) from e

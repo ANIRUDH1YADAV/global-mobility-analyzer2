@@ -30,3 +30,5 @@ evidently
 boto3
 
 pymongo  
+
+huggingface_hub
